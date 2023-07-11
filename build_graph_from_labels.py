@@ -17,7 +17,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from preprocessing.preprocessing.faithlife_utils import make_faithlife_map_2
+from preprocess_churcharticles.preprocessing.faithlife_utils import make_faithlife_map_2
 #import preprocessing path
 
 
@@ -202,16 +202,18 @@ def ingest_predictions_to_neo4j(json_file_path: str, uri: str, user: str,
 
 
 database_df = load_faithlife_database_to_single_df(
-    '../preprocessing/faithlife_data/entities')
+    '../preprocess_churcharticles/preprocessing/faithlife_data/entities')
 faithlife_map = make_faithlife_map_2(database_df)
 
 neo4j_uri = "bolt://localhost:7687"
 neo4j_user = "neo4j"
 neo4j_password = "faithlife"
-article_data = load_relation_data('../preprocessing/faithlife_data')
+article_data = load_relation_data(
+    '../preprocess_churcharticles/preprocessing/faithlife_data')
 for csv_files in article_data:
     ingest_csv_to_neo4j(database_df, csv_files, neo4j_uri, neo4j_user,
                         neo4j_password)
 
-ingest_predictions_to_neo4j('../prediction_data/unlabeled_predictions.json',
-                            neo4j_uri, neo4j_user, neo4j_password)
+ingest_predictions_to_neo4j(
+    '../preprocess_churcharticles/prediction_data/unlabeled_predictions.json',
+    neo4j_uri, neo4j_user, neo4j_password)
